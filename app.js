@@ -4,6 +4,10 @@ const methodOverride = require('method-override');
 const path = require('path');
 require('dotenv').config();
 
+// Import models and routes
+const { syncDatabase, testConnection } = require('./models');
+const authRoutes = require('./routes/auth');
+
 const app = express();
 
 // Middleware
@@ -18,8 +22,8 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   cookie: { 
-    secure: false, // Set true jika menggunakan HTTPS
-    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    secure: false,
+    maxAge: 24 * 60 * 60 * 1000
   }
 }));
 
@@ -37,7 +41,10 @@ app.use((req, res, next) => {
   next();
 });
 
-// Routes akan ditambahkan di step berikutnya
+// Routes
+app.use('/auth', authRoutes);
+
+// Home route
 app.get('/', (req, res) => {
   res.render('index', { title: 'Upwork Clone - Find Your Perfect Freelancer' });
 });
@@ -58,7 +65,22 @@ app.use((err, req, res, next) => {
   });
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server berjalan di http://localhost:${PORT}`);
-});
+// Database connection and server start
+const startServer = async () => {
+  try {
+    await testConnection();
+    await syncDatabase();
+    
+    const PORT = process.env.PORT || 3000;
+    app.listen(PORT, () => {
+      console.log(`Server berjalan di http://localhost:${PORT}`);
+      console.log(`📊Database: ${process.env.DB_NAME}`);
+      console.log(`Role: Client, Freelancer, Admin`);
+    });
+  } catch (error) {
+    console.error('Failed to start server:', error);
+    process.exit(1);
+  }
+};
+
+startServer();

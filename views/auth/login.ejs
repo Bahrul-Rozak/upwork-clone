@@ -1,0 +1,83 @@
+<%- include('../partials/header', { title: 'Login - UpworkClone' }) %>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow-lg border-0 rounded-lg">
+                <div class="card-header bg-primary text-white text-center py-4">
+                    <h3 class="my-0">
+                        <i class="fas fa-sign-in-alt me-2"></i>Login
+                    </h3>
+                </div>
+                <div class="card-body p-5">
+                    <% if (success) { %>
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <i class="fas fa-check-circle me-2"></i><%= success %>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    <% } %>
+                    
+                    <% if (error) { %>
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <i class="fas fa-exclamation-circle me-2"></i><%= error %>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    <% } %>
+
+                    <form action="/auth/login" method="POST">
+                        <input type="hidden" name="redirect" value="<%= redirect %>">
+                        
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="fas fa-envelope"></i>
+                                </span>
+                                <input type="email" class="form-control" id="email" name="email" 
+                                       value="<%= locals.email || '' %>" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="password" class="form-label">Password</label>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="fas fa-lock"></i>
+                                </span>
+                                <input type="password" class="form-control" id="password" name="password" required>
+                            </div>
+                        </div>
+
+                        <div class="d-grid mb-3">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-sign-in-alt me-2"></i>Login
+                            </button>
+                        </div>
+
+                        <div class="text-center">
+                            <p class="mb-0">
+                                Belum punya akun? 
+                                <a href="/auth/register" class="text-decoration-none">Daftar di sini</a>
+                            </p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="row mt-4">
+                <div class="col-md-6 mb-3">
+                    <a href="/auth/register?role=client" class="btn btn-outline-primary w-100">
+                        <i class="fas fa-user-tie me-2"></i>Daftar sebagai Client
+                    </a>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <a href="/auth/register?role=freelancer" class="btn btn-outline-success w-100">
+                        <i class="fas fa-code me-2"></i>Daftar sebagai Freelancer
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include('../partials/footer') %>
